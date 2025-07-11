@@ -17,7 +17,7 @@ def main_chatbot(question, excel_path):
         # Initialize LLM
         openai_api_key = st.secrets["OPENAI_API_KEY"]
         llm = ChatOpenAI(
-            model="gpt-3.5-turbo",
+            model="gpt-3.5-turbo-1106",
             temperature=0,
             openai_api_key=openai_api_key
         )
