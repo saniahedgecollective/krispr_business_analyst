@@ -12,7 +12,7 @@ st.set_page_config(page_title="KRISPR Digital Business Analyst", layout="centere
 st.sidebar.title("🔍 Navigation")
 page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 
-# ---- Shared CSS ----
+# ---- Shared CSS (Minimal for clean UI) ----
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -27,23 +27,13 @@ html, body, .stApp {
     color: #222;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    letter-spacing: 1px;
-}
-.glass-panel {
-    background: rgba(255,255,255,0.95);
-    border-radius: 24px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
-    border: 1px solid #f0f0f0;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    margin-bottom: 2rem;
 }
 .chat-box {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-    padding: 0 1rem 7rem;
     max-width: 700px;
-    margin: 0 auto;
+    margin: 0 auto 2rem;
 }
 .message {
     max-width: 80%;
@@ -55,7 +45,6 @@ html, body, .stApp {
     display: flex;
     align-items: flex-end;
     animation: fadeIn 0.5s;
-    transition: background 0.3s;
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px);}
@@ -85,62 +74,22 @@ html, body, .stApp {
     font-size: 1.5em;
     box-shadow: 0 2px 8px #0001;
 }
-.input-area {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 700px;
-    background: #fff;
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.85rem 1.2rem;
-    box-shadow: 0 -2px 16px rgba(0,0,0,0.07);
-    border-radius: 16px;
-    z-index: 10;
-}
-input[type="text"] {
-    flex-grow: 1;
-    padding: 0.85rem 1.1rem;
-    border-radius: 10px;
-    border: 1.5px solid #bdbdbd;
-    font-size: 1.08rem;
-    background: #f7f7ff;
-    transition: border 0.2s;
-}
-input[type="text"]:focus {
-    border: 1.5px solid #D2995B;
-    outline: none;
-}
-button {
-    background: #D2995B;
-    color: #fff;
-    padding: 0.85rem 1.3rem;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1.08rem;
-    box-shadow: 0 2px 8px #0002;
-    transition: background 0.2s, box-shadow 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-}
-button:hover {
-    background: #b07a44;
-    box-shadow: 0 4px 16px #0002;
-}
 .stButton>button {
     width: 100%;
+    background: #D2995B;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+}
+.stButton>button:hover {
+    background: #b07a44;
 }
 .footer {
     text-align: center;
     color: #D2995B;
     font-size: 0.95em;
-    margin-top: 2.5em;
-    margin-bottom: 2em;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
     opacity: 0.7;
 }
 </style>
@@ -149,7 +98,6 @@ button:hover {
 # ---- Page: Chatbot ----
 if page == "Chatbot":
     st.markdown('<div class="main-title">🤖 KRISPR Digital Business Analyst</div>', unsafe_allow_html=True)
-    st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
 
     if not os.path.exists(EXCEL_PATH):
         st.warning("⚠️ Excel file not found. Please upload it from Admin Panel.")
@@ -170,8 +118,6 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---- Fixed Input Bar ----
-    st.markdown('<div class="input-area">', unsafe_allow_html=True)
     with st.form("chat_form", clear_on_submit=True):
         user_input = st.text_input(
             label="",
@@ -179,7 +125,6 @@ if page == "Chatbot":
             label_visibility="collapsed"
         )
         submitted = st.form_submit_button("Send")
-    st.markdown('</div>', unsafe_allow_html=True)
 
     if submitted and user_input:
         st.session_state.chat_history.append(("user", user_input))
@@ -190,8 +135,6 @@ if page == "Chatbot":
             except Exception as e:
                 st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
         st.experimental_rerun()
-
-    st.markdown('</div>', unsafe_allow_html=True)  # Close glass-panel
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
@@ -211,7 +154,6 @@ elif page == "Admin Panel":
         st.stop()
 
     st.markdown('<div class="main-title">🔐 Admin Panel - Update Excel File</div>', unsafe_allow_html=True)
-    st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
@@ -230,11 +172,9 @@ elif page == "Admin Panel":
         else:
             st.warning("⚠️ Please enter a valid file ID.")
 
-    st.markdown('</div>', unsafe_allow_html=True)  # Close glass-panel
-
 # ---- Footer ----
 st.markdown("""
-<hr style="margin-top: 3rem; margin-bottom: 1rem;">
+<hr>
 <div class="footer">
     © 2025 KRISPR. All rights reserved. | Developed with 💡 by The Hedge Collective
 </div>
