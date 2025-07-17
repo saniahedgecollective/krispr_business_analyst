@@ -125,7 +125,10 @@ def main_chatbot(question, excel_path):
 
         if not summary.strip():
             summary = "No relevant data was matched from the sheets, but try to interpret the user's question based on general logic or respond helpfully if possible."
-        
+        # -- Check for gibberish or meaningless input like IDs or tokens --
+        if re.fullmatch(r"[A-Za-z0-9_-]{15,}", question.strip()):
+          return "⚠️ That doesn't appear to be a valid business question. Please rephrase your query to relate to product performance, sales, marketing, or supply chain."
+
         llm = ChatOpenAI(
             model="gpt-3.5-turbo-1106",
             temperature=0,
