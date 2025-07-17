@@ -170,11 +170,16 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # ---- Fixed Input Bar ----
+    st.markdown('<div class="input-area">', unsafe_allow_html=True)
     with st.form("chat_form", clear_on_submit=True):
-        st.markdown('<div class="input-area">', unsafe_allow_html=True)
-        user_input = st.text_input("", placeholder="Ask your business question...", label_visibility="collapsed")
+        user_input = st.text_input(
+            label="",
+            placeholder="Ask your business question...",
+            label_visibility="collapsed"
+        )
         submitted = st.form_submit_button("Send")
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     if submitted and user_input:
         st.session_state.chat_history.append(("user", user_input))
