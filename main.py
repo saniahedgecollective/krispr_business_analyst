@@ -147,7 +147,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.experimental_rerun()
+                st.stop()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
