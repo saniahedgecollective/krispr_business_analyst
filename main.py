@@ -142,7 +142,7 @@ if page == "Chatbot":
     # If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
         st.session_state.pending_user_input = user_input.strip()
-        st.experimental_rerun()
+        st.rerun()  # Changed from st.experimental_rerun()
 
     # If there's pending user input, process it and clear the flag
     if st.session_state.get("pending_user_input"):
@@ -167,7 +167,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.stop()
+                st.rerun()  # Changed from st.experimental_rerun()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
@@ -176,7 +176,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.stop()
+        st.rerun()  # Changed from st.experimental_rerun()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
