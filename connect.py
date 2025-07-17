@@ -124,8 +124,8 @@ def main_chatbot(question, excel_path):
                 summary += "\n### Change Filtered:\n" + ch[change_cols].to_string(index=False) + "\n"
 
         if not summary.strip():
-            return "❌ No matching data found for this question."
-
+            summary = "No relevant data was matched from the sheets, but try to interpret the user's question based on general logic or respond helpfully if possible."
+        
         llm = ChatOpenAI(
             model="gpt-3.5-turbo-1106",
             temperature=0,
