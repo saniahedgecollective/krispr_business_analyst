@@ -109,7 +109,7 @@ if page == "Chatbot":
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
         css_class = "user" if role == "user" else "bot"
-        avatar = "🧑" if role == "user" else "🤖"
+        avatar = "🙍" if role == "user" else "🧠"
         st.markdown(
             f'<div class="message {css_class}">'
             f'<div class="avatar">{avatar}</div>'
