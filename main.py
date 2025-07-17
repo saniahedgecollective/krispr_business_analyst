@@ -134,7 +134,6 @@ if page == "Chatbot":
                 st.session_state.chat_history.append(("bot", answer))
             except Exception as e:
                 st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-        st.experimental_rerun()
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
