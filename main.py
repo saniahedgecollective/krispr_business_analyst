@@ -116,9 +116,6 @@ if page == "Chatbot":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
-    if "user_input" not in st.session_state:
-        st.session_state.user_input = ""
-
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
         css_class = "user" if role == "user" else "bot"
@@ -130,27 +127,24 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # Input form
     with st.form("chat_form", clear_on_submit=True):
-        new_input = st.text_input(
+        user_input = st.text_input(
             label="",
             placeholder="Ask your business question...",
-            value=st.session_state.user_input,
             key="chat_input",
             label_visibility="collapsed"
         )
         submitted = st.form_submit_button("Send")
 
-    if submitted:
-        if new_input.strip() != "":
-            st.session_state.chat_history.append(("user", new_input))
-            st.session_state.user_input = new_input
-            try:
-                with st.spinner("Analyzing..."):
-                    response = main_chatbot(new_input, EXCEL_PATH)
-                st.session_state.chat_history.append(("bot", response))
-            except Exception as e:
-                st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-        st.session_state.user_input = ""
+    if submitted and user_input.strip():
+        st.session_state.chat_history.append(("user", user_input.strip()))
+        try:
+            with st.spinner("Analyzing..."):
+                response = main_chatbot(user_input.strip(), EXCEL_PATH)
+            st.session_state.chat_history.append(("bot", response))
+        except Exception as e:
+            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
