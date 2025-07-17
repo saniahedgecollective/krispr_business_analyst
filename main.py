@@ -115,6 +115,8 @@ if page == "Chatbot":
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+    if "pending_user_input" not in st.session_state:
+        st.session_state.pending_user_input = None
 
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
@@ -137,14 +139,22 @@ if page == "Chatbot":
         )
         submitted = st.form_submit_button("Send")
 
+    # If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
-        st.session_state.chat_history.append(("user", user_input.strip()))
+        st.session_state.pending_user_input = user_input.strip()
+        st.experimental_rerun()
+
+    # If there's pending user input, process it and clear the flag
+    if st.session_state.get("pending_user_input"):
+        st.session_state.chat_history.append(("user", st.session_state.pending_user_input))
         try:
             with st.spinner("Analyzing..."):
-                response = main_chatbot(user_input.strip(), EXCEL_PATH)
+                response = main_chatbot(st.session_state.pending_user_input, EXCEL_PATH)
             st.session_state.chat_history.append(("bot", response))
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+        st.session_state.pending_user_input = None
+        st.experimental_rerun()
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
