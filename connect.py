@@ -6,6 +6,10 @@ def main_chatbot(question, excel_path):
     from langchain_openai import ChatOpenAI
     from prompt import prompt_template
 
+        # ✅ Greeting handling — bypass the rest if it's just a friendly hello
+    if question.strip().lower() in ["hi", "hello", "hey", "salaam", "salam", "hi there"]:
+        return "👋 Hello! I’m your KRISPR Digital Analyst. How can I assist you today?"
+
     def extract_keywords(q):
         product = None
         week = None

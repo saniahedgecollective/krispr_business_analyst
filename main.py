@@ -12,7 +12,7 @@ st.set_page_config(page_title="KRISPR Digital Business Analyst", layout="centere
 st.sidebar.title("🔍 Navigation")
 page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 
-# ---- Shared CSS (Minimal for clean UI) ----
+# ---- Shared CSS ----
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -21,8 +21,6 @@ html, body, .stApp {
     background: #fff !important;
     font-family: 'Inter', sans-serif;
 }
-
-/* ---- Title ---- */
 .main-title {
     text-align: center;
     font-size: 2.5em;
@@ -31,19 +29,15 @@ html, body, .stApp {
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
-
-/* ---- Chat Container ---- */
 .chat-box {
     display: flex;
     flex-direction: column;
-    align-items: center;          
-    gap: 1.5rem;                  
+    align-items: center;
+    gap: 1.5rem;
     max-width: 700px;
     margin: 0 auto 3rem;
     padding: 0 1rem;
 }
-
-/* ---- Message Bubble ---- */
 .message {
     display: flex;
     align-items: flex-start;
@@ -57,14 +51,10 @@ html, body, .stApp {
     transition: background 0.3s;
     position: relative;
 }
-
-/* ---- Fade Animation ---- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px);}
     to { opacity: 1; transform: translateY(0);}
 }
-
-/* ---- User Bubble ---- */
 .user {
     align-self: flex-end;
     background: #D1F5D3;
@@ -72,8 +62,6 @@ html, body, .stApp {
     border-top-right-radius: 0;
     width: fit-content;
 }
-
-/* ---- Bot Bubble ---- */
 .bot {
     align-self: flex-start;
     background: #D2995B;
@@ -81,8 +69,6 @@ html, body, .stApp {
     border-top-left-radius: 0;
     width: fit-content;
 }
-
-/* ---- Avatar ---- */
 .avatar {
     width: 38px;
     height: 38px;
@@ -97,8 +83,6 @@ html, body, .stApp {
     flex-shrink: 0;
     box-shadow: 0 2px 8px #0001;
 }
-
-/* ---- Send Button ---- */
 .stButton>button {
     width: 100%;
     background: #D2995B;
@@ -110,8 +94,6 @@ html, body, .stApp {
 .stButton>button:hover {
     background: #b07a44;
 }
-
-/* ---- Footer ---- */
 .footer {
     text-align: center;
     color: #D2995B;
@@ -134,14 +116,16 @@ if page == "Chatbot":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
+    if "pending_user_input" not in st.session_state:
+        st.session_state.pending_user_input = ""
+
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
         css_class = "user" if role == "user" else "bot"
-        avatar = "🙍" if role == "user" else "🧠"
+        avatar = "" if role == "user" else "🧠"
+        avatar_html = f'<div class="avatar">{avatar}</div>' if avatar else ""
         st.markdown(
-            f'<div class="message {css_class}">'
-            f'<div class="avatar">{avatar}</div>'
-            f'<div>{msg}</div></div>',
+            f'<div class="message {css_class}">{avatar_html}<div>{msg}</div></div>',
             unsafe_allow_html=True
         )
     st.markdown('</div>', unsafe_allow_html=True)
@@ -150,18 +134,23 @@ if page == "Chatbot":
         user_input = st.text_input(
             label="",
             placeholder="Ask your business question...",
+            value=st.session_state.pending_user_input,
+            key="chat_input",
             label_visibility="collapsed"
         )
         submitted = st.form_submit_button("Send")
 
     if submitted and user_input:
+        st.session_state.pending_user_input = user_input
         st.session_state.chat_history.append(("user", user_input))
-        with st.spinner("Analyzing..."):
-            try:
-                answer = main_chatbot(user_input, EXCEL_PATH)
-                st.session_state.chat_history.append(("bot", answer))
-            except Exception as e:
-                st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+        try:
+            with st.spinner("Analyzing..."):
+                response = main_chatbot(user_input, EXCEL_PATH)
+            st.session_state.chat_history.append(("bot", response))
+        except Exception as e:
+            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+        st.session_state.pending_user_input = ""
+        st.experimental_rerun()
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
