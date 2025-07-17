@@ -16,10 +16,13 @@ page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 html, body, .stApp {
     background: #fff !important;
     font-family: 'Inter', sans-serif;
 }
+
+/* ---- Title ---- */
 .main-title {
     text-align: center;
     font-size: 2.5em;
@@ -28,62 +31,87 @@ html, body, .stApp {
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
+
+/* ---- Chat Container ---- */
 .chat-box {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    align-items: center;          
+    gap: 1.5rem;                  
     max-width: 700px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 3rem;
+    padding: 0 1rem;
 }
+
+/* ---- Message Bubble ---- */
 .message {
-    max-width: 80%;
+    display: flex;
+    align-items: flex-start;
+    max-width: 100%;
     padding: 1rem 1.4rem;
     border-radius: 18px;
     font-size: 1.08rem;
     line-height: 1.6rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    display: flex;
-    align-items: flex-end;
     animation: fadeIn 0.5s;
+    transition: background 0.3s;
+    position: relative;
 }
+
+/* ---- Fade Animation ---- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px);}
     to { opacity: 1; transform: translateY(0);}
 }
+
+/* ---- User Bubble ---- */
 .user {
     align-self: flex-end;
     background: #D1F5D3;
     color: #1B5E20;
     border-top-right-radius: 0;
+    width: fit-content;
 }
+
+/* ---- Bot Bubble ---- */
 .bot {
     align-self: flex-start;
     background: #D2995B;
     color: #fff;
     border-top-left-radius: 0;
+    width: fit-content;
 }
+
+/* ---- Avatar ---- */
 .avatar {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    margin-right: 0.9em;
+    margin-right: 0.8em;
+    margin-top: 0.3em;
     background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5em;
+    font-size: 1.4em;
+    flex-shrink: 0;
     box-shadow: 0 2px 8px #0001;
 }
+
+/* ---- Send Button ---- */
 .stButton>button {
     width: 100%;
     background: #D2995B;
     color: #fff;
     border-radius: 10px;
     font-weight: 600;
+    padding: 0.6rem 1.2rem;
 }
 .stButton>button:hover {
     background: #b07a44;
 }
+
+/* ---- Footer ---- */
 .footer {
     text-align: center;
     color: #D2995B;
@@ -156,7 +184,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.experimental_rerun()
+        st.stop()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
