@@ -9,7 +9,7 @@ ADMIN_PASSWORD = st.secrets.get("admin_password", "krispr2024")  # Set in .strea
 st.set_page_config(page_title="KRISPR Digital Business Analyst", layout="centered")
 
 # ---- Sidebar ----
-st.sidebar.image("https://i.imgur.com/your-logo.png", width=120)  # Replace with your logo URL
+st.sidebar.image("KrisprLogo.png", width=120)  # Replace with your logo URL
 st.sidebar.title("🔍 Navigation")
 page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 
