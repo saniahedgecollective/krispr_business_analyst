@@ -154,7 +154,6 @@ if page == "Chatbot":
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
         st.session_state.pending_user_input = None
-        
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
