@@ -16,7 +16,6 @@ page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
 html, body, .stApp {
     background: #fff !important;
     font-family: 'Inter', sans-serif;
@@ -127,6 +126,7 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # ✅ Clean input logic (no form)
     user_input = st.text_input(
         label="",
         placeholder="Ask your business question...",
@@ -134,7 +134,9 @@ if page == "Chatbot":
         label_visibility="collapsed"
     )
 
-    if st.button("Send") and user_input.strip():
+    send = st.button("Send")
+
+    if send and user_input.strip():
         st.session_state.chat_history.append(("user", user_input.strip()))
         try:
             with st.spinner("Analyzing..."):
@@ -142,7 +144,9 @@ if page == "Chatbot":
             st.session_state.chat_history.append(("bot", response))
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-        st.session_state.chat_input = ""
+
+        # ✅ Safe input clear
+        st.session_state["chat_input"] = ""
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
