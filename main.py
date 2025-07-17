@@ -116,8 +116,8 @@ if page == "Chatbot":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
-    if "pending_user_input" not in st.session_state:
-        st.session_state.pending_user_input = ""
+    if "user_input" not in st.session_state:
+        st.session_state.user_input = ""
 
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
@@ -131,26 +131,26 @@ if page == "Chatbot":
     st.markdown('</div>', unsafe_allow_html=True)
 
     with st.form("chat_form", clear_on_submit=True):
-        user_input = st.text_input(
+        new_input = st.text_input(
             label="",
             placeholder="Ask your business question...",
-            value=st.session_state.pending_user_input,
+            value=st.session_state.user_input,
             key="chat_input",
             label_visibility="collapsed"
         )
         submitted = st.form_submit_button("Send")
 
-    if submitted and user_input:
-        st.session_state.pending_user_input = user_input
-        st.session_state.chat_history.append(("user", user_input))
-        try:
-            with st.spinner("Analyzing..."):
-                response = main_chatbot(user_input, EXCEL_PATH)
-            st.session_state.chat_history.append(("bot", response))
-        except Exception as e:
-            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-        st.session_state.pending_user_input = ""
-        st.stop()
+    if submitted:
+        if new_input.strip() != "":
+            st.session_state.chat_history.append(("user", new_input))
+            st.session_state.user_input = new_input
+            try:
+                with st.spinner("Analyzing..."):
+                    response = main_chatbot(new_input, EXCEL_PATH)
+                st.session_state.chat_history.append(("bot", response))
+            except Exception as e:
+                st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+        st.session_state.user_input = ""
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
