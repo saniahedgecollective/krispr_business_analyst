@@ -16,6 +16,7 @@ page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 html, body, .stApp {
     background: #fff !important;
     font-family: 'Inter', sans-serif;
@@ -126,12 +127,11 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ✅ Reliable input (no form, no delayed execution)
     user_input = st.text_input(
-        label="Ask your business question...",
+        label="",
+        placeholder="Ask your business question...",
         key="chat_input",
-        label_visibility="collapsed",
-        placeholder="Ask your business question..."
+        label_visibility="collapsed"
     )
 
     if st.button("Send") and user_input.strip():
@@ -142,8 +142,6 @@ if page == "Chatbot":
             st.session_state.chat_history.append(("bot", response))
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-
-        # Clear input manually
         st.session_state.chat_input = ""
 
 # ---- Page: Admin Panel ----
