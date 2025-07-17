@@ -4,7 +4,7 @@ import gdown
 from connect import main_chatbot
 
 EXCEL_PATH = "latest_file.xlsx"
-ADMIN_PASSWORD = st.secrets.get("admin_password", "krispr2024")
+ADMIN_PASSWORD = st.secrets.get("admin_password", "krispr2024")  # Set in .streamlit/secrets.toml
 
 st.set_page_config(page_title="KRISPR Digital Business Analyst", layout="centered")
 
@@ -16,6 +16,7 @@ page = st.sidebar.radio("Go to", ["Chatbot", "Admin Panel"])
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 html, body, .stApp {
     background: #fff !important;
     font-family: 'Inter', sans-serif;
@@ -126,17 +127,17 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ✅ Clean input logic (no form)
-    user_input = st.text_input(
-        label="",
-        placeholder="Ask your business question...",
-        key="chat_input",
-        label_visibility="collapsed"
-    )
+    # Input form
+    with st.form("chat_form", clear_on_submit=True):
+        user_input = st.text_input(
+            label="",
+            placeholder="Ask your business question...",
+            key="chat_input",
+            label_visibility="collapsed"
+        )
+        submitted = st.form_submit_button("Send")
 
-    send = st.button("Send")
-
-    if send and user_input.strip():
+    if submitted and user_input.strip():
         st.session_state.chat_history.append(("user", user_input.strip()))
         try:
             with st.spinner("Analyzing..."):
@@ -144,9 +145,6 @@ if page == "Chatbot":
             st.session_state.chat_history.append(("bot", response))
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-
-        # ✅ Safe input clear
-        st.session_state["chat_input"] = ""
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
@@ -160,7 +158,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.experimental_rerun()
+                st.stop()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
@@ -169,7 +167,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.experimental_rerun()
+        st.stop()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
