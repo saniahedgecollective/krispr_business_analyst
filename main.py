@@ -129,14 +129,18 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-user_input = st.text_input(
-    label="",
-    placeholder="Ask your business question...",
-    key="chat_input",
-    label_visibility="collapsed"
-)
+# Input form and chatbot response
+with st.form("chat_form", clear_on_submit=True):
+    user_input = st.text_input(
+        label="",
+        placeholder="Ask your business question...",
+        key="chat_input",
+        label_visibility="collapsed"
+    )
+    submitted = st.form_submit_button("Send")
 
-if st.button("Send"):
+# Process chatbot input immediately after submission
+if submitted:
     user_text = user_input.strip()
     if user_text:
         st.session_state.chat_history.append(("user", user_text))
@@ -144,13 +148,10 @@ if st.button("Send"):
             with st.spinner("Analyzing..."):
                 response = main_chatbot(user_text, EXCEL_PATH)
             st.session_state.chat_history.append(("bot", response))
-            # Clear input box by resetting session state
-            st.session_state.chat_input = ""
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
     else:
         st.warning("⚠️ Please enter a message before sending.")
-
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
