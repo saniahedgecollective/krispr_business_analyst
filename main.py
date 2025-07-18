@@ -107,7 +107,7 @@ html, body, .stApp {
 
 # ---- Page: Chatbot ----
 if page == "Chatbot":
-    st.markdown('<div class="main-title">🤖 KRISPR Digital Business Analyst</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">KRISPR Digital Business Analyst</div>', unsafe_allow_html=True)
 
     if not os.path.exists(EXCEL_PATH):
         st.warning("⚠️ Excel file not found. Please upload it from Admin Panel.")
