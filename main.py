@@ -138,6 +138,7 @@ if page == "Chatbot":
             label_visibility="collapsed"
         )
         submitted = st.form_submit_button("Send")
+        st.rerun()
 
     # If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
