@@ -154,7 +154,7 @@ if page == "Chatbot":
     # If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
         st.session_state.pending_user_input = user_input.strip()
-        st.experimental_rerun()
+        st.rerun()
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
