@@ -139,7 +139,7 @@ if page == "Chatbot":
         )
         submitted = st.form_submit_button("Send")
 
-    # If form submitted, store user input in session state and rerun
+    #If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
      user_text = user_input.strip()
     st.session_state.chat_history.append(("user", user_text))
