@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 import os
 import gdown
 from connect import main_chatbot
@@ -128,16 +128,18 @@ if page == "Chatbot":
             unsafe_allow_html=True
         )
     st.markdown('</div>', unsafe_allow_html=True)
+
     # Input form and chatbot response
     with st.form("chat_form", clear_on_submit=True):
         user_input = st.text_input(
-        label="",
-        placeholder="Ask your business question...",
-        key="chat_input",
-        label_visibility="collapsed"
-     )
-    submitted = st.form_submit_button("Send")
-# Process chatbot input immediately after submission
+            label="",
+            placeholder="Ask your business question...",
+            key="chat_input",
+            label_visibility="collapsed"
+        )
+        submitted = st.form_submit_button("Send")
+
+    # Process chatbot input immediately after submission
     if submitted:
         user_text = user_input.strip()
         if user_text:
@@ -165,7 +167,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.rerun()  # Changed from st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
@@ -174,7 +176,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.rerun()  # Changed from st.experimental_rerun()
+        st.rerun()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
