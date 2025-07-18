@@ -90,6 +90,7 @@ html, body, .stApp {
     border-radius: 10px;
     font-weight: 600;
     padding: 0.6rem 1.2rem;
+    border: none;
 }
 .stButton>button:hover {
     background: #b07a44;
@@ -113,11 +114,13 @@ if page == "Chatbot":
         st.warning("⚠️ Excel file not found. Please upload it from Admin Panel.")
         st.stop()
 
+    # Initialize session state
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
-    if "pending_user_input" not in st.session_state:
-        st.session_state.pending_user_input = None
+    if "chat_input" not in st.session_state:
+        st.session_state.chat_input = ""
 
+    # Show chat history
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
         css_class = "user" if role == "user" else "bot"
@@ -129,29 +132,32 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Input form and chatbot response
-with st.form("chat_form", clear_on_submit=True):
-    user_input = st.text_input(
+    # Chat input + button
+    input_placeholder = st.empty()
+    button_placeholder = st.empty()
+
+    # Render the input
+    user_input = input_placeholder.text_input(
         label="",
         placeholder="Ask your business question...",
-        key="chat_input",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="chat_input"
     )
-    submitted = st.form_submit_button("Send")
 
-# Process chatbot input immediately after submission
-if submitted:
-    user_text = user_input.strip()
-    if user_text:
-        st.session_state.chat_history.append(("user", user_text))
-        try:
+    # On click of Send button
+    if button_placeholder.button("Send"):
+        user_text = st.session_state.chat_input.strip()
+        if user_text:
+            st.session_state.chat_history.append(("user", user_text))
             with st.spinner("Analyzing..."):
-                response = main_chatbot(user_text, EXCEL_PATH)
+                try:
+                    response = main_chatbot(user_text, EXCEL_PATH)
+                except Exception as e:
+                    response = f"⚠️ Error: {e}"
             st.session_state.chat_history.append(("bot", response))
-        except Exception as e:
-            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-    else:
-        st.warning("⚠️ Please enter a message before sending.")
+            st.session_state.chat_input = ""  # Clear after processing
+        else:
+            st.warning("⚠️ Please enter a message before sending.")
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
@@ -165,7 +171,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.rerun()  # Changed from st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
@@ -174,7 +180,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.rerun()  # Changed from st.experimental_rerun()
+        st.rerun()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
