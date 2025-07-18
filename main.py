@@ -148,8 +148,10 @@ if submitted:
             with st.spinner("Analyzing..."):
                 response = main_chatbot(user_text, EXCEL_PATH)
             st.session_state.chat_history.append(("bot", response))
+            st.rerun()
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+            st.rerun()
     else:
         st.warning("⚠️ Please enter a message before sending.")
 
