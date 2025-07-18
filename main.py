@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 import os
 import gdown
 from connect import main_chatbot
@@ -107,7 +107,7 @@ html, body, .stApp {
 
 # ---- Page: Chatbot ----
 if page == "Chatbot":
-    st.markdown('<div class="main-title">🤖 KRISPR Digital Business Analyst</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">KRISPR Digital Business Analyst</div>', unsafe_allow_html=True)
 
     if not os.path.exists(EXCEL_PATH):
         st.warning("⚠️ Excel file not found. Please upload it from Admin Panel.")
@@ -129,7 +129,7 @@ if page == "Chatbot":
         )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Input form
+    # Input form and chatbot response
     with st.form("chat_form", clear_on_submit=True):
         user_input = st.text_input(
             label="",
@@ -139,17 +139,21 @@ if page == "Chatbot":
         )
         submitted = st.form_submit_button("Send")
 
-    # If form submitted, store user input in session state and rerun
-    if submitted and user_input.strip():
-     user_text = user_input.strip()
-    st.session_state.chat_history.append(("user", user_text))
-    try:
-        with st.spinner("Analyzing..."):
-            response = main_chatbot(user_text, EXCEL_PATH)
-        st.session_state.chat_history.append(("bot", response))
-    except Exception as e:
-        st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-
+    # Process chatbot input immediately after submission
+    if submitted:
+        user_text = user_input.strip()
+        if user_text:
+            st.session_state.chat_history.append(("user", user_text))
+            try:
+                with st.spinner("Analyzing..."):
+                    response = main_chatbot(user_text, EXCEL_PATH)
+                st.session_state.chat_history.append(("bot", response))
+                st.rerun()
+            except Exception as e:
+                st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+                st.rerun()
+        else:
+            st.warning("⚠️ Please enter a message before sending.")
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
@@ -163,7 +167,7 @@ elif page == "Admin Panel":
             if password == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.success("✅ Logged in as admin.")
-                st.rerun()  # Changed from st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("❌ Incorrect password.")
         st.stop()
@@ -172,7 +176,7 @@ elif page == "Admin Panel":
 
     if st.button("Logout"):
         st.session_state.admin_authenticated = False
-        st.rerun()  # Changed from st.experimental_rerun()
+        st.rerun()
 
     file_id = st.text_input("Paste Google Drive File ID here:")
 
