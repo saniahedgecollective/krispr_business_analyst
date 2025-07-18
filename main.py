@@ -128,7 +128,7 @@ if page == "Chatbot":
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
         st.session_state.pending_user_input = None
-        st.experimental_rerun()  # <--- This ensures the chat updates immediately
+        st.rerun()  # <--- This ensures the chat updates immediately
 
     st.markdown('<div class="chat-box">', unsafe_allow_html=True)
     for role, msg in st.session_state.chat_history:
