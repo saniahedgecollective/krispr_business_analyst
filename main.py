@@ -141,20 +141,14 @@ if page == "Chatbot":
 
     # If form submitted, store user input in session state and rerun
     if submitted and user_input.strip():
-        st.session_state.pending_user_input = user_input.strip()
-        st.rerun()  # Changed from st.experimental_rerun()
-
-    # If there's pending user input, process it and clear the flag
-    if st.session_state.get("pending_user_input"):
-        st.session_state.chat_history.append(("user", st.session_state.pending_user_input))
-        try:
-            with st.spinner("Analyzing..."):
-                response = main_chatbot(st.session_state.pending_user_input, EXCEL_PATH)
-            st.session_state.chat_history.append(("bot", response))
-        except Exception as e:
-            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-        st.session_state.pending_user_input = None
-
+     user_text = user_input.strip()
+    st.session_state.chat_history.append(("user", user_text))
+    try:
+        with st.spinner("Analyzing..."):
+            response = main_chatbot(user_text, EXCEL_PATH)
+        st.session_state.chat_history.append(("bot", response))
+    except Exception as e:
+        st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
     if "admin_authenticated" not in st.session_state:
