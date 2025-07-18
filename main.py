@@ -152,7 +152,6 @@ if page == "Chatbot":
             with st.spinner("Analyzing..."):
                 response = main_chatbot(st.session_state.pending_user_input, EXCEL_PATH)
             st.session_state.chat_history.append(("bot", response))
-            st.rerun()
         except Exception as e:
             st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
         st.session_state.pending_user_input = None
