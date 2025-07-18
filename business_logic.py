@@ -173,3 +173,11 @@ def get_top_products_by_media_units(media, week, top_n=3):
     df = media[media["Week"] == week]
     grouped = df.groupby("Product Name")["Media Units Sold"].sum()
     return grouped.sort_values(ascending=False).head(top_n)
+
+def get_top_n_performing_products(raw_data, n=5, week=None, metric="Sold Quantity"):
+    df = raw_data.copy()
+    if week is not None:
+        df["Week"] = pd.to_datetime(df["Local Order Date"]).dt.isocalendar().week
+        df = df[df["Week"] == week]
+    grouped = df.groupby("Item Description")[metric].sum().sort_values(ascending=False).head(n)
+    return grouped  # Series: product name -> metric value

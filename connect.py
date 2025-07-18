@@ -105,16 +105,16 @@ def main_chatbot(question, excel_path):
         if "negative net income" in q and "week 24" in q:
             products = get_negative_ni_per_sku_products(media, 24)
             return f"❌ Products with negative NI in Week 24:\n" + ", ".join(products)
+        if "top 5 performing products" in q and "week 24" in q:
+            top5 = logic.get_top_n_performing_products(raw_data, n=5, week=24)
+            return f"🏆 Top 5 Performing Products in Week 24:\n{top5.to_string()}"
+ 
 
         # --------------------------------------
-        # ❓ FALLBACK TO LLM FOR GENERAL/NATURAL RESPONSES
+        # FALLBACK TO LLM FOR GENERAL/NATURAL RESPONSES
         # --------------------------------------
 
         summary = "No business logic match. Using filtered data below for context:\n"
-
-        # Optional: basic filters to show a preview (already done in your current code)
-        # You can add back your Raw/Organic/Media/Overall filter preview here if needed
-        # For now, just go to LLM if no rule matched
 
         if re.fullmatch(r"[A-Za-z0-9_-]{15,}", question.strip()):
             return "That doesn't appear to be a valid business question. Please ask a question related to business performance."
