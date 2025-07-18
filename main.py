@@ -128,32 +128,30 @@ if page == "Chatbot":
             unsafe_allow_html=True
         )
     st.markdown('</div>', unsafe_allow_html=True)
-
-# Input form and chatbot response
-with st.form("chat_form", clear_on_submit=True):
-    user_input = st.text_input(
+    # Input form and chatbot response
+    with st.form("chat_form", clear_on_submit=True):
+        user_input = st.text_input(
         label="",
         placeholder="Ask your business question...",
         key="chat_input",
         label_visibility="collapsed"
-    )
+     )
     submitted = st.form_submit_button("Send")
-
 # Process chatbot input immediately after submission
-if submitted:
-    user_text = user_input.strip()
-    if user_text:
-        st.session_state.chat_history.append(("user", user_text))
-        try:
-            with st.spinner("Analyzing..."):
-                response = main_chatbot(user_text, EXCEL_PATH)
-            st.session_state.chat_history.append(("bot", response))
-            st.rerun()
-        except Exception as e:
-            st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
-            st.rerun()
-    else:
-        st.warning("⚠️ Please enter a message before sending.")
+    if submitted:
+        user_text = user_input.strip()
+        if user_text:
+            st.session_state.chat_history.append(("user", user_text))
+            try:
+                with st.spinner("Analyzing..."):
+                    response = main_chatbot(user_text, EXCEL_PATH)
+                st.session_state.chat_history.append(("bot", response))
+                st.rerun()
+            except Exception as e:
+                st.session_state.chat_history.append(("bot", f"⚠️ Error: {e}"))
+                st.rerun()
+        else:
+            st.warning("⚠️ Please enter a message before sending.")
 
 # ---- Page: Admin Panel ----
 elif page == "Admin Panel":
