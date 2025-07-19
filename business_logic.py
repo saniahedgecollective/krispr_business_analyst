@@ -181,3 +181,25 @@ def get_top_n_performing_products(raw_data, n=5, week=None, metric="Sold Quantit
         df = df[df["Week"] == week]
     grouped = df.groupby("Item Description")[metric].sum().sort_values(ascending=False).head(n)
     return grouped  # Series: product name -> metric value
+
+
+
+def get_avg_overall_daily_sv(change, week):
+    """Get the average overall daily SV for a specific week"""
+    df = change[change["Week"] == week]
+    if df.empty:
+        return None
+    return df["Avg Overall Daily SV"].mean()
+
+def get_change_in_media_share(change, week1, week2):
+    """Get the change in media share percentage between two weeks"""
+    df1 = change[change["Week"] == week1]
+    df2 = change[change["Week"] == week2]
+    
+    if df1.empty or df2.empty:
+        return None
+    
+    share1 = df1["Media Share %"].mean()
+    share2 = df2["Media Share %"].mean()
+    
+    return share2 - share1
